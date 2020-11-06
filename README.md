@@ -2,10 +2,14 @@
 ===========
 Dependencies
 ===========
-Axios
-Material UI
-React Context API
-spotify-web-api-js: https://github.com/JMPerez/spotify-web-api-js
+-Axios
+
+-Material UI
+
+-React Context API: I don't explain the context API with reducer, stateProvider and initialState in the APP
+because you can find everything inside the react doc: https://fr.reactjs.org/docs/context.html
+
+-spotify-web-api-js: https://github.com/JMPerez/spotify-web-api-js
 
 
 ===========
