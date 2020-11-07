@@ -13,6 +13,9 @@ const scopes = [
   "user-read-playback-state",
   "user-top-read",
   "user-modify-playback-state",
+  "streaming",
+  "user-read-email",
+  "user-read-private",
 ];
 
 //allows to extract the token received fro
@@ -31,3 +34,6 @@ export const getTokenFromUrl = () => {
 export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
   "%20"
 )}&response_type=token&show_dialog=true`;
+
+
+

@@ -11,7 +11,7 @@ import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
 import { Grid, Slider } from "@material-ui/core";
 import { useStateValue } from "../StateProvider";
 
-const Footer = ({ spotify }) => {
+const Footer = ({ token, spotify }) => {
   const [{ item, playing }, dispatch] = useStateValue();
   const [iconGreenLeft, setIconGreenLeft] = useState(false);
   const [iconGreenRight, setIconGreenRight] = useState(false);
@@ -30,7 +30,7 @@ const Footer = ({ spotify }) => {
         item: r.item,
       });
     });
-  }, [spotify]);
+  }, [spotify, dispatch]);
 
   const handlePlayPause = () => {
     if (playing) {
@@ -49,42 +49,54 @@ const Footer = ({ spotify }) => {
   };
 
   const skipNext = () => {
-    spotify.skipToNext();
-    spotify.getMyCurrentPlayingTrack().then((r) => {
-      dispatch({
-        type: "SET_ITEM",
-        item: r.item,
-      });
-      dispatch({
-        type: "SET_PLAYING",
-        playing: true,
+    spotify.skipToNext().then(() => {
+      spotify.getMyCurrentPlayingTrack().then((r) => {
+        dispatch({
+          type: "SET_ITEM",
+          item: r.item,
+        });
+        dispatch({
+          type: "SET_PLAYING",
+          playing: true,
+        });
       });
     });
   };
 
   const skipPrevious = () => {
-    spotify.skipToPrevious();
-    spotify.getMyCurrentPlayingTrack().then((r) => {
-      dispatch({
-        type: "SET_ITEM",
-        item: r.item,
-      });
-      dispatch({
-        type: "SET_PLAYING",
-        playing: true,
+    spotify.skipToPrevious().then(() => {
+      spotify.getMyCurrentPlayingTrack().then((r) => {
+        dispatch({
+          type: "SET_ITEM",
+          item: r.item,
+        });
+        dispatch({
+          type: "SET_PLAYING",
+          playing: true,
+        });
       });
     });
   };
 
-
-
+  //toggle green when shuffle active
   const toggleGreenLeft = () => {
     setIconGreenLeft(!iconGreenLeft);
-  };
-  const toggleGreenRight = () => {
-    setIconGreenRight(!iconGreenRight);
+    if (iconGreenLeft) {
+      spotify.setShuffle(false);
+    } else {
+      spotify.setShuffle(true);
+    }
   };
 
+  //toggle green when repeat active
+  const toggleGreenRight = () => {
+    setIconGreenRight(!iconGreenRight);
+    if (iconGreenRight) {
+      spotify.setRepeat("off");
+    } else {
+      spotify.setRepeat("track");
+    }
+  };
 
   return (
     <div className="footer">
@@ -115,7 +127,7 @@ const Footer = ({ spotify }) => {
           onClick={toggleGreenLeft}
         />
 
-        <SkipPreviousIcon onClick={skipNext} className="footer__icon" />
+        <SkipPreviousIcon onClick={skipPrevious} className="footer__icon" />
         {playing ? (
           <PauseCircleOutlineIcon
             onClick={handlePlayPause}
@@ -129,7 +141,7 @@ const Footer = ({ spotify }) => {
             className="footer__icon"
           />
         )}
-        <SkipNextIcon onClick={skipPrevious} className="footer__icon" />
+        <SkipNextIcon onClick={skipNext} className="footer__icon" />
         <RepeatIcon
           className={`footer__icon ${iconGreenRight ? "footer__green" : null}`}
           onClick={toggleGreenRight}

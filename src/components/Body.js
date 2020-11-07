@@ -8,18 +8,20 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 const Body = ({ spotify }) => {
-  const [{ discover_weekly }, dispatch] = useStateValue();
+  const [{ discover_weekly, selectedPlaylist }, dispatch] = useStateValue();
 
   const playPlaylist = (id) => {
+    console.log("hey", selectedPlaylist);
     spotify
       .play({
-        context_uri: `spotify:playlist:37i9dQZF1E362NhoUimQCp`,
+        context_uri: `spotify:playlist:${selectedPlaylist}`,
       })
       .then((res) => {
-        spotify.getMyCurrentPlayingTrack().then((response) => {
+        spotify.getMyCurrentPlayingTrack().then((r) => {
+          console.log(r);
           dispatch({
             type: "SET_ITEM",
-            item: response.item,
+            item: r.item,
           });
           dispatch({
             type: "SET_PLAYING",
@@ -35,10 +37,10 @@ const Body = ({ spotify }) => {
         uris: [`spotify:track:${id}`],
       })
       .then((res) => {
-        spotify.getMyCurrentPlayingTrack().then((response) => {
+        spotify.getMyCurrentPlayingTrack().then((r) => {
           dispatch({
             type: "SET_ITEM",
-            item: response.item,
+            item: r.item,
           });
           dispatch({
             type: "SET_PLAYING",
@@ -56,7 +58,7 @@ const Body = ({ spotify }) => {
         <img src={discover_weekly?.images[0].url} alt="" />
         <div className="body__infoText">
           <strong>PLAYLIST</strong>
-          <h1>Daily Mix</h1>
+          <h1>{discover_weekly?.name}</h1>
           <p>{discover_weekly?.description}</p>
         </div>
       </div>
@@ -72,7 +74,7 @@ const Body = ({ spotify }) => {
         </div>
 
         {discover_weekly?.tracks.items.map((item) => (
-          <SongRow playSong={playSong} track={item.track} />
+          <SongRow key={item.track.id} playSong={playSong} track={item.track} />
         ))}
       </div>
     </div>

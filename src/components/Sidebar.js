@@ -5,9 +5,21 @@ import HomeIcon from "@material-ui/icons/Home";
 import Search from "@material-ui/icons/Search";
 import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import { useStateValue } from "../StateProvider";
+import { SET_SELECTED_PLAYLIST } from "../reducers/types";
 
-const Sidebar = () => {
+const Sidebar = ({ spotify }) => {
   const [{ playlists }, dispatch] = useStateValue();
+
+  const selectPlaylist = (key) => {
+    console.log(key);
+    spotify.getPlaylist(key).then((key) => {
+      dispatch({
+        type: SET_SELECTED_PLAYLIST,
+        selectedPlaylist: key,
+      });
+    });
+  };
+
   return (
     <div className="sidebar">
       <img
@@ -23,7 +35,13 @@ const Sidebar = () => {
       <hr />
       <div className="sidebar__playlists">
         {playlists?.items?.map((playlist) => (
-          <SidebarOption title={playlist.name} />
+          <SidebarOption
+            key={playlist.id}
+            title={playlist.name}
+            onClick={(key) => {
+              console.log(key);
+            }}
+          />
         ))}
       </div>
     </div>

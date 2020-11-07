@@ -19,7 +19,6 @@ function App() {
 
   useEffect(() => {
     const hash = getTokenFromUrl();
-
     //with the location et hash methods, we reset the URL so only
     //the app got the token and not the user (for security)
     window.location.hash = "";
@@ -53,7 +52,7 @@ function App() {
     }
   }, [token, dispatch]);
 
-  console.log(token);
+  // console.log(token);
 
   return (
     <div className="app">
